@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giphy Search</title>
+    <style>
+        /* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: #333;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #ff6b6b;
+    margin-top: 30px;
+}
+
+input[type="text"] {
+    width: 300px;
+    padding: 10px;
+    font-size: 1.1rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: #ff6b6b;
+    outline: none;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ff4a4a;
+}
+
+#gif-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+.gif {
+    width: 300px;
+    height: auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.gif:hover {
+    transform: translateY(-5px);
+}
+
+.gif img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+@media screen and (max-width: 768px) {
+    input[type="text"] {
+        width: 100%;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .gif {
+        width: 100%;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <h1>Search for GIFs</h1>
+    <input type="text" id="search" placeholder="Search for GIFs">
+    <button onclick="searchGifs()">Search</button>
+
+    <div id="gif-container"></div>
+
+    <script>
+        const apiKey = 'I8K4OwnBx21RU5bztbcZHM9QO9pNBUD0'; // Replace with your Giphy API key
+
+        function searchGifs() {
+            const searchTerm = document.getElementById('search').value;
+            const url = `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${searchTerm}&limit=4&offset=0&rating=g&lang=en`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    
+                    const gifContainer = document.getElementById('gif-container');
+                    gifContainer.innerHTML = ''; // Clear previous results
+
+                    data.data.forEach(gif => {
+                        const gifDiv = document.createElement('div');
+                        gifDiv.classList.add('gif');
+
+                        const gifImg = document.createElement('img');
+                        gifImg.src = gif.images.original.url;
+
+                        gifDiv.appendChild(gifImg);
+                        gifContainer.appendChild(gifDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching GIFs:', error);
+                });
+        }
+    </script>
+
+</body>
+</html>
